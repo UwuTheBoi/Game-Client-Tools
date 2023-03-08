@@ -52,15 +52,18 @@ sealed class GameClientCrypt
         for (uint32 i = 0; i < 0x100; ++i)
             keyState[i] = (uint8)i;
 
-        byte v100 = 0;
+        byte prevKeyStateOffset = 0;
 
         for (uint32 j = 0; j < 0x100; ++j)
         {
-            var v102 = keyState[j];
-            v100 += (uint8)(keyState[j % const1 + 0x100] + v102);
-            ref uint8 v103 = ref keyState[v100];
-            keyState[j] = v103;
-            v103 = v102;
+            var currKeyState = keyState[j];
+
+            prevKeyStateOffset += (uint8)(keyState[j % const1 + 0x100] + currKeyState);
+
+            ref var prevKeyState = ref keyState[prevKeyStateOffset];
+
+            keyState[j] = prevKeyState;
+            prevKeyState = currKeyState;
         }
 
         return keyState;
