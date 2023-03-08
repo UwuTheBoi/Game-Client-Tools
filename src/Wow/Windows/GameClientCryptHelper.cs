@@ -36,7 +36,7 @@ class GameClientCryptHelper : IGameClientCryptHelper
             var rdataOffsetDiff = rdata.VirtualAddress - rdata.PointerToRawData;
             var decodedValue = (int32)(cryptKeyPatternResult + (decoded.MemoryDisplacement32 - rdataOffsetDiff + textOffsetDiff));
 
-            Console.WriteLine($"0x{decodedValue}");
+            Console.WriteLine($"0x{decodedValue:X}");
 
             offsetLogger?.AppendLine($"key:{decodedValue}");
 
@@ -50,6 +50,10 @@ class GameClientCryptHelper : IGameClientCryptHelper
     {
         _peHeaders ??= new PEHeaders(new MemoryStream(binary.ToArray()));
 
+        var text = _peHeaders.SectionHeaders.Single(s => s.Name == ".text");
+        var textOffsetDiff = text.VirtualAddress - text.PointerToRawData;
+        var foundResults = new Dictionary<int, int>();
+
         foreach (var p in Patterns.StartOffsetPatterns)
         {
             var startOffsetPatternResult = binary.Search(p);
@@ -61,21 +65,25 @@ class GameClientCryptHelper : IGameClientCryptHelper
                 startOffsetPatternResult += 1;
 
             var bstart = binary[(startOffsetPatternResult + 4)..];
-            var text = _peHeaders.SectionHeaders.Single(s => s.Name == ".text");
-            var textOffsetDiff = text.VirtualAddress - text.PointerToRawData;
             var memoryPageOffset = (startOffsetPatternResult + 1 + textOffsetDiff) + Unsafe.ReadUnaligned<int32>(ref bstart[0]) + 7;
+
+            foundResults[memoryPageOffset] = startOffsetPatternResult;
+        }
+
+        if (foundResults.Count > 0)
+        {
+            var memoryPageOffset = foundResults.OrderByDescending(x => x.Key - x.Value).First().Key;
             var aligned = ((memoryPageOffset + (0x1000 - 1)) & ~(0x1000 - 1));
             var filePageOffset = aligned - 0xC00;
 
-            memoryPageOffset = aligned;
-
-            Console.WriteLine($"0x{filePageOffset}");
+            Console.WriteLine($"0x{aligned:X}");
 
             offsetLogger?.AppendLine($"fPage:{filePageOffset}");
-            offsetLogger?.AppendLine($"mPage:{memoryPageOffset}");
+            offsetLogger?.AppendLine($"mPage:{aligned}");
 
-            return (filePageOffset, memoryPageOffset);
+            return (filePageOffset, aligned);
         }
+
 
         return (-1, -1);
     }
