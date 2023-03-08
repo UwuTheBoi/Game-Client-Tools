@@ -6,7 +6,7 @@ All tools you see here are purely for educational/learning purposes.
 
 ### License, Copyright & Contributions
 
-License: [MIT License](https://github.com/UwuTheBoi/Game-Client-Tool/LICENSE)
+License: [MIT License](https://github.com/UwuTheBoi/Game-Client-Tools/blob/main/LICENSE)
 Contributions: Not accepted.
 Issues: Accepted
 
