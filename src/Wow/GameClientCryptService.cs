@@ -201,6 +201,7 @@ class GameClientCryptService
 
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("Decryption failed :(");
+        Console.ForegroundColor = ConsoleColor.Gray;
 
         return false;
     }
