@@ -3,11 +3,21 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Iced.Intel;
 
-namespace Tools.Client.Wow.Windows;
+// Copyright (c) 2023 UwuTheBoi.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-class GameClientCryptHelper : IGameClientCryptHelper
+namespace Tools.Client.ClientCrypt;
+
+sealed class WindowsGameClientCryptHelper : IGameClientCryptHelper
 {
+    readonly IPatterns _patterns;
+
     PEHeaders _peHeaders;
+
+    public WindowsGameClientCryptHelper(IPatterns patterns)
+    {
+        _patterns = patterns;
+    }
 
     public ReadOnlySpan<uint8> GetCryptKey(Span<uint8> binary, StringBuilder offsetLogger, int32 offset = 0)
     {
@@ -21,7 +31,7 @@ class GameClientCryptHelper : IGameClientCryptHelper
             return binary[offset..(_peHeaders.PEHeader.ImportTableDirectory.RelativeVirtualAddress - rdataOffsetDiff + _peHeaders.PEHeader.BaseOfCode)];
         }
 
-        foreach (var p in Patterns.CryptKeyPatterns)
+        foreach (var p in _patterns.CryptKeys)
         {
             var cryptKeyPatternResult = binary.Search(p);
 
@@ -54,7 +64,7 @@ class GameClientCryptHelper : IGameClientCryptHelper
         var textOffsetDiff = text.VirtualAddress - text.PointerToRawData;
         var foundResults = new Dictionary<int, int>();
 
-        foreach (var p in Patterns.StartOffsetPatterns)
+        foreach (var p in _patterns.StartOffsets)
         {
             var startOffsetPatternResult = binary.Search(p);
 
@@ -87,4 +97,6 @@ class GameClientCryptHelper : IGameClientCryptHelper
 
         return (-1, -1);
     }
+
+    public bool Validate(Span<uint8> binary) => binary.Search(_patterns.Validation) != -1;
 }

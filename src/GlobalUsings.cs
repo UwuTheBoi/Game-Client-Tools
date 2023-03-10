@@ -1,4 +1,7 @@
-﻿global using int8 = System.SByte;
+﻿// Copyright (c) 2023 UwuTheBoi.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+global using int8 = System.SByte;
 global using int16 = System.Int16;
 global using int32 = System.Int32;
 global using int64 = System.Int64;

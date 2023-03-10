@@ -1,14 +1,17 @@
-﻿using System.CommandLine;
+﻿// Copyright (c) 2023 UwuTheBoi.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Tools.Client.Wow.Windows;
+using Tools.Client.ClientCrypt;
 
-namespace Tools.Client.Wow;
+namespace Tools.Client.Services;
 
-class GameClientCryptService
+sealed class GameClientCryptService
 {
     readonly CommandLineOptions _commandLineOptions;
     readonly IGameClientCryptHelper _gameClientCryptHelper;
@@ -181,7 +184,7 @@ class GameClientCryptService
 
                     Console.WriteLine("Validating...");
 
-                    if (bin.AsSpan().Search(Patterns.AdlerValidationPattern) == -1)
+                    if (!_gameClientCryptHelper.Validate(bin))
                     {
                         Unsafe.CopyBlockUnaligned(ref bin[0], ref _binary[0], (uint32)_binary.Length);
                         continue;
