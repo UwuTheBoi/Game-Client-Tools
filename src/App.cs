@@ -9,8 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Tools.Client;
 using Tools.Client.ClientCrypt;
+using Tools.Client.Diablo;
 using Tools.Client.Services;
-using Tools.Client.Wow;
 using Tools.Client.Wow.Windows;
 
 var sw = Stopwatch.StartNew();
@@ -43,7 +43,7 @@ var host = Host.CreateDefaultBuilder()
 
         _ = game switch
         {
-            Game.Diablo => throw new NotImplementedException(),
+            Game.Diablo => services.AddScoped<IPatterns, DiabloPatterns>(),
             Game.Overwatch => throw new NotImplementedException(),
             Game.Wow => services.AddScoped<IPatterns, WowPatterns>(),
             _ => throw new NotImplementedException()

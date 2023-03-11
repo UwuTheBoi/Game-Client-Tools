@@ -28,5 +28,6 @@ sealed class WowPatterns : IPatterns
         new int16[] { 0x4C, 0x8D, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0xF3, 0xAA }
     };
 
+    // Adler32 constant.
     public int16[] Validation { get; } = { 0xB9, 0xF1, 0xD8, 0x27, 0x98 };
 }

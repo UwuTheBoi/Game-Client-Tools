@@ -13,7 +13,7 @@ Issues: Accepted
 ## Supported Games & Features
 
 ### Diablo IV
-* Windows x86_64: In progress.
+* Windows x86_64: Decryption & Encryption of binaries.
 
 ### Overwatch
 * Windows x86_64: In progress.

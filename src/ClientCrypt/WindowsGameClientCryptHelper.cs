@@ -1,10 +1,10 @@
-﻿using System.Reflection.PortableExecutable;
+﻿// Copyright (c) 2023 UwuTheBoi.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Iced.Intel;
-
-// Copyright (c) 2023 UwuTheBoi.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Tools.Client.ClientCrypt;
 
